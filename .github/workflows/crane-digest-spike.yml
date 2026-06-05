@@ -1,0 +1,64 @@
+# crane copy digest-equality spike (Step-0 B9 spike, "Option A" for C3)
+# Auth: built-in GITHUB_TOKEN (packages: write) — no PAT needed.
+# Proves `crane copy` preserves the (multi-arch) manifest digest across packages,
+# which is what the release pipeline relies on to promote internal -> staging/public
+# without rebuilding.
+name: crane-copy-digest-spike
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  digest-equality:
+    runs-on: ubuntu-latest
+    env:
+      SRC: busybox:1.37
+    steps:
+      - uses: imjasonh/setup-crane@v0.4
+
+      - name: Login to GHCR (GITHUB_TOKEN — Option A, no PAT)
+        run: crane auth login ghcr.io -u "${{ github.actor }}" -p "${{ secrets.GITHUB_TOKEN }}"
+
+      - name: Compute lowercase owner namespace
+        run: echo "OWNER=$(echo '${{ github.repository_owner }}' | tr '[:upper:]' '[:lower:]')" >> "$GITHUB_ENV"
+
+      - name: Seed an 'internal' multi-arch image (simulates an RC build)
+        run: |
+          set -euo pipefail
+          INTERNAL="ghcr.io/${OWNER}/throwaway-spike/spike-internal:v1"
+          crane copy "$SRC" "$INTERNAL"
+          echo "INTERNAL=$INTERNAL" >> "$GITHUB_ENV"
+
+      - name: Promote internal -> staging (simulates the shadow promote)
+        run: |
+          set -euo pipefail
+          STAGING="ghcr.io/${OWNER}/throwaway-spike/spike-staging:v1"
+          crane copy "$INTERNAL" "$STAGING"
+          echo "STAGING=$STAGING" >> "$GITHUB_ENV"
+
+      - name: Assert digest equality across docker.io -> internal -> staging
+        run: |
+          set -euo pipefail
+          SRC_D=$(crane digest "$SRC")
+          INT_D=$(crane digest "$INTERNAL")
+          STG_D=$(crane digest "$STAGING")
+          echo "source  : $SRC_D"
+          echo "internal: $INT_D"
+          echo "staging : $STG_D"
+          test "$SRC_D" = "$INT_D" || { echo "::error::internal digest != source"; exit 1; }
+          test "$INT_D" = "$STG_D" || { echo "::error::staging digest != internal"; exit 1; }
+          echo "PASS: digests identical across the full copy chain"
+
+      - name: Confirm the multi-arch manifest list was preserved (not flattened)
+        run: |
+          set -euo pipefail
+          MT=$(crane manifest "$STAGING" | jq -r '.mediaType')
+          echo "staging mediaType: $MT"
+          case "$MT" in
+            *manifest.list*|*image.index*) echo "PASS: multi-arch manifest list preserved" ;;
+            *) echo "::error::expected a manifest list/index, got $MT"; exit 1 ;;
+          esac
