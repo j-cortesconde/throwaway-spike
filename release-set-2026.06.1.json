@@ -1,0 +1,17 @@
+{
+  "app": "0.49.0",
+  "chart": "0.49.0",
+  "images": {
+    "backend": "ghcr.io/kinetic-solutions-group/mcpgateway-staging/backend@sha256:03d3f88f218327119e06d2af44e347149fe7078b22b7f97b87d8fc7b20ba11f9",
+    "frontend": "ghcr.io/kinetic-solutions-group/mcpgateway-staging/frontend@sha256:b2ecad03122f57497e7409b2d9795f0694462932e8b7aa227a31ac7c39b64bb5",
+    "playwright-bridge": "ghcr.io/kinetic-solutions-group/mcpgateway-staging/playwright-bridge@sha256:1c904b1c4ea0c8cbb489a992f28005575fb952d33c4fdb12480fcd7cfb6f0c74",
+    "sandbox-runtime": "ghcr.io/kinetic-solutions-group/mcpgateway-staging/sandbox-runtime@sha256:3181f0bb86a6d6d0f043bf2a9bec02c1f266ab95b336d1b99cb56b89991a66d6",
+    "stdio-bridge": "ghcr.io/kinetic-solutions-group/mcpgateway-staging/stdio-bridge@sha256:a90c6a26e2423369feddf4d844947c6c8c73913b7dea975a6adc40dbaf84b247"
+  },
+  "overlay_url": "https://j-cortesconde.github.io/throwaway-spike/release-set-2026.06.1.values.yaml",
+  "published_at": "2026-06-16T22:55:40Z",
+  "registry": "ghcr.io/kinetic-solutions-group/mcpgateway-staging",
+  "release_set_id": "2026.06.1",
+  "sdk": "0.49.0",
+  "severity": "recommended"
+}
