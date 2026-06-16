@@ -1,0 +1,36 @@
+{
+  "backend": {
+    "image": {
+      "digest": "sha256:7a41967bc6d6aa32e8c5e460e6f160cbd47fdf6ac98c87f9a45122873bcae5af",
+      "repository": "ghcr.io/kinetic-solutions-group/mcpgateway-staging/backend"
+    }
+  },
+  "frontend": {
+    "image": {
+      "digest": "sha256:111f021507bf8224ab3f52ea17264a55309b0063ffd1192dbf7a1390c26f7d8b",
+      "repository": "ghcr.io/kinetic-solutions-group/mcpgateway-staging/frontend"
+    }
+  },
+  "releaseSet": {
+    "id": "2026.06.2"
+  },
+  "sandbox": {
+    "image": {
+      "digest": "sha256:3181f0bb86a6d6d0f043bf2a9bec02c1f266ab95b336d1b99cb56b89991a66d6",
+      "repository": "ghcr.io/kinetic-solutions-group/mcpgateway-staging/sandbox-runtime"
+    }
+  },
+  "servers": {
+    "bridgeImage": {
+      "digest": "sha256:a90c6a26e2423369feddf4d844947c6c8c73913b7dea975a6adc40dbaf84b247",
+      "repository": "ghcr.io/kinetic-solutions-group/mcpgateway-staging/stdio-bridge"
+    },
+    "k8sImages": {
+      "playwright-bridge": {
+        "digest": "sha256:1c904b1c4ea0c8cbb489a992f28005575fb952d33c4fdb12480fcd7cfb6f0c74",
+        "repository": "ghcr.io/kinetic-solutions-group/mcpgateway-staging/playwright-bridge"
+      }
+    }
+  },
+  "versionApiUrl": "https://j-cortesconde.github.io/throwaway-spike/version.json"
+}
